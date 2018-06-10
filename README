@@ -1,1 +1,23 @@
-##扩展spark-sql语法
+扩展spark-sql语法
+
+扩展的sql包括:
+1. 合并表 merge table xx.xx
+2. 表数据导出为csv文件  export table xx.xx to 'xxx.csv'
+3. 加载csv文件至临时表  load data 'xxx.csv' table xxx
+
+使用方法:
+执行 mvn clean package -Palone
+将sparksql-command-1.0-SNAPSHOT.jar拷贝到目标机器上
+
+下载aspectjweaver-1.8.10.jar包
+
+启动spark-shell, 加入参数
+/bin/spark-shell --conf spark.driver.extraJavaOptions=-javaagent:/home/admin/aspectjweaver-1.8.10.jar \\
+                 --conf spark.driver.extraClassPath=/home/admin/sparksql-command-1.0-SNAPSHOT.jar
+
+通过spark.sql(" ")即可执行相关语法
+
+附：通过antlr4编译g4文件得到java源码的命令
+
+antlr4 -o {workplace}/src/main/java/org/apache/spark/sql/antlr4 -package org.apache.spark.sql.antlr4 \\
+-visitor -lib {workplace}/src/main/antlr4/org/apache/spark/sql {workplace}/src/main/antlr4/org/apache/spark/sql/SqlBase.g4
